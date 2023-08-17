@@ -5,6 +5,7 @@ const Project = require('../models/Projects'); // Import your Project model
 
 // Fetch all projects
 router.get('/', async (req, res) => {
+    console.log('Processing GET request on / ...')
     try {
         const projects = await Project.findAll();
         res.json(projects);
