@@ -2,8 +2,9 @@ const express = require('express');
 const router = express.Router();
 const Project = require('../models/Projects'); // Import your Project model
 
+
 // Fetch all projects
-router.get('/projects', async (req, res) => {
+router.get('/', async (req, res) => {
     try {
         const projects = await Project.findAll();
         res.json(projects);
@@ -13,7 +14,7 @@ router.get('/projects', async (req, res) => {
     }
 });
 
-router.post('/projects/new', async (req, res, next) => {
+router.post('/new', async (req, res, next) => {
     try {
         const { name, description, tech_stack, link } = req.body;
         // Create a new project record

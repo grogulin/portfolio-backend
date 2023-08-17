@@ -28,7 +28,7 @@ app.use(cors());
 app.use(bodyParser.json());
 
 
-app.use(projectRoutes);
+app.use('/projects', projectRoutes);
 
 sequelize
   .sync()
