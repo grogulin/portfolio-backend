@@ -35,7 +35,7 @@ sequelize
   .then(() => {
     console.log('Database synced');
     app.listen(sequelizePort, () => {
-      console.log(`Server is running on port ${sequelizePort}`);
+      console.log(`Sequelize server is running on port ${sequelizePort}`);
     });
   })
   .catch(error => {

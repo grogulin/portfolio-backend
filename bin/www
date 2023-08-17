@@ -5,7 +5,7 @@ require('dotenv').config();
  * Module dependencies.
  */
 
-var app = require('../app');
+var app = require('../server');
 var debug = require('debug')('portfolio-backend:server');
 var http = require('http');
 
