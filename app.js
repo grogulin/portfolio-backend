@@ -10,7 +10,7 @@ const bodyParser = require('body-parser');
 
 var projectRoutes = require('./routes/projectRoutes');
 
-var sequelizePort = '3002';
+var sequelizePort = process.env.SEQUELIZE_PORT;
 
 var app = express();
 
