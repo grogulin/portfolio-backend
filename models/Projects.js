@@ -26,7 +26,7 @@ const Project = sequelize.define('Project', {
     created_at: {
         type: DataTypes.DATE,
         field: 'created_at',
-        allowNull: false,
+        allowNull: true,
         defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
     },
 }
