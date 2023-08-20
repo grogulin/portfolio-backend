@@ -5,11 +5,14 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 const cors = require('cors'); // Import the 'cors' package
-const sequelize = require('./database'); // Import your Sequelize instance
+const sequelize = require('./config/database'); // Import your Sequelize instance
 
 const bodyParser = require('body-parser');
 
-var projectRoutes = require('./routes/projectRoutes');
+const projectRoutes = require('./routes/projectRoutes');
+const signupRoutes = require('./routes/signupRoutes');
+const loginRoutes = require('./routes/loginRoutes');
+
 
 var sequelizePort = process.env.SEQUELIZE_PORT;
 
@@ -33,8 +36,9 @@ const corsOptions = {
 
 app.use(bodyParser.json());
 
-
 app.use('/projects', projectRoutes);
+app.use('/auth', signupRoutes);
+app.use('/auth', loginRoutes);
 
 sequelize
   .sync()

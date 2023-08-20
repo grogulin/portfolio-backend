@@ -1,6 +1,6 @@
 const Sequelize = require('sequelize');
 const { DataTypes } = require('sequelize');
-const sequelize = require('../database'); // Import your Sequelize instance
+const sequelize = require('../config/database'); // Import your Sequelize instance
 
 const Project = sequelize.define('Project', {
     // id: {

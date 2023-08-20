@@ -1,6 +1,10 @@
+require('dotenv').config();
+
 const express = require('express');
 const router = express.Router();
-const Project = require('../models/Projects'); // Import your Project model
+const Project = require('../models/Project'); // Import your Project model
+const protectRoute = require('../middlewares/authMiddleware');
+
 
 
 // Fetch all projects
@@ -18,7 +22,8 @@ router.get('/', async (req, res) => {
     }, 2000);
 });
 
-router.post('/new', async (req, res, next) => {
+router.post('/new', protectRoute, async (req, res, next) => {
+
     try {
         const { name, description, tech_stack, link, github_link } = req.body;
         // Create a new project record
@@ -36,7 +41,7 @@ router.post('/new', async (req, res, next) => {
     }
     });
 
-router.put('/:id', async (req, res, next) => {
+router.put('/:id', protectRoute, async (req, res, next) => {
     try {
         const projectId = req.params.id;
         const { name, description, tech_stack, link, github_link } = req.body;
@@ -65,7 +70,7 @@ router.put('/:id', async (req, res, next) => {
 });
     
 // Delete a project
-router.delete('/:id', async (req, res, next) => {
+router.delete('/:id', protectRoute, async (req, res, next) => {
     try {
         const projectId = req.params.id;
 
