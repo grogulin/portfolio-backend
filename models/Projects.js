@@ -23,6 +23,10 @@ const Project = sequelize.define('Project', {
         type: DataTypes.STRING,
         allowNull: false,
     },
+    github_link: {
+        type: DataTypes.STRING,
+        allowNull: true,
+    },
     created_at: {
         type: DataTypes.DATE,
         field: 'created_at',

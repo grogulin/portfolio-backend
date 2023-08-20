@@ -20,13 +20,14 @@ router.get('/', async (req, res) => {
 
 router.post('/new', async (req, res, next) => {
     try {
-        const { name, description, tech_stack, link } = req.body;
+        const { name, description, tech_stack, link, github_link } = req.body;
         // Create a new project record
         const newProject = await Project.create({
             name,
             description,
             tech_stack,
             link,
+            github_link
         });
 
         res.status(201).json(newProject);
@@ -38,7 +39,7 @@ router.post('/new', async (req, res, next) => {
 router.put('/:id', async (req, res, next) => {
     try {
         const projectId = req.params.id;
-        const { name, description, tech_stack, link } = req.body;
+        const { name, description, tech_stack, link, github_link } = req.body;
 
         // Find the project by ID
         const projectToUpdate = await Project.findByPk(projectId);
@@ -52,6 +53,7 @@ router.put('/:id', async (req, res, next) => {
         projectToUpdate.description = description;
         projectToUpdate.tech_stack = tech_stack;
         projectToUpdate.link = link;
+        projectToUpdate.github_link = github_link;
 
         // Save the updated project
         await projectToUpdate.save();
