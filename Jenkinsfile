@@ -13,7 +13,10 @@ pipeline {
         stage('Deploy') {
             
             steps {
-                withCredentials([usernamePassword(credentialsId: 'postgresql_dev', usernameVariable: 'DB_USER', passwordVariable: 'DB_PASSWORD')]) {
+                withCredentials([
+                    usernamePassword(credentialsId: 'postgresql_dev', usernameVariable: 'DB_USER', passwordVariable: 'DB_PASSWORD'),
+                    string(credentialsId: 'portfolio_jwt_secret', variable: 'JWT_SECRET')
+                    ]) {
                     
                     script {
                         
@@ -25,6 +28,7 @@ DB_PORT=5432
 DB_NAME=portfolio_dev
 DB_USER=$DB_USER
 DB_PASSWORD=$DB_PASSWORD
+JWT_SECRET=$JWT_SECRET
                         """
                         
                         sh "echo '${envContent}' > .env"

@@ -2,7 +2,7 @@ const Sequelize = require('sequelize');
 const { DataTypes } = require('sequelize');
 const sequelize = require('../config/database'); // Import your Sequelize instance
 
-const Project = sequelize.define('Project', {
+const Project = sequelize.define('project', {
     // id: {
     //     type: DataTypes.INTEGER,
     //     allowNull: false,
