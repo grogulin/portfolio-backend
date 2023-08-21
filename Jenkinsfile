@@ -14,7 +14,7 @@ pipeline {
             
             steps {
                 withCredentials([
-                    usernamePassword(credentialsId: 'postgresql_dev', usernameVariable: 'DB_USER', passwordVariable: 'DB_PASSWORD'),
+                    usernamePassword(credentialsId: 'postgresql_prod', usernameVariable: 'DB_USER', passwordVariable: 'DB_PASSWORD'),
                     string(credentialsId: 'portfolio_jwt_secret', variable: 'JWT_SECRET')
                     ]) {
                     
@@ -25,7 +25,7 @@ EXPRESSJS_PORT=7011
 SEQUELIZE_PORT=7012
 DB_HOST=152.67.72.136
 DB_PORT=5432
-DB_NAME=portfolio_dev
+DB_NAME=portfolio_prod
 DB_USER=$DB_USER
 DB_PASSWORD=$DB_PASSWORD
 JWT_SECRET=$JWT_SECRET
