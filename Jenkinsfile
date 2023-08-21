@@ -29,7 +29,7 @@ DB_NAME=portfolio_prod
 DB_USER=$DB_USER
 DB_PASSWORD=$DB_PASSWORD
 JWT_SECRET=$JWT_SECRET
-DISABLE_NEW_USERS=${packageType}
+DISABLE_NEW_USERS=${DISABLE_NEW_USERS}
                         """
                         
                         sh "echo '${envContent}' > .env"
