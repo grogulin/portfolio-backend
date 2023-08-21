@@ -5,25 +5,28 @@ const bcrypt = require('bcrypt');
 const User = require('../models/User');
 const router = express.Router();
 const sequelize = require('../config/database'); // Import your Sequelize instance
+require('dotenv').config();
 
 router.post('/signup', async (req, res, next) => {
-  res.status(403);
-  // const transaction = await sequelize.transaction(); // Start a transaction
+  if (process.env.DISABLE_NEW_USERS === "true") {
+    res.status(403).json({ message: "New CMS admins registration is disabled" });
+  } else {
+    const transaction = await sequelize.transaction(); // Start a transaction
+    try {
+      const { username, password } = req.body;
+      const hashedPassword = await bcrypt.hash(password, 10);
 
-  // try {
-  //   const { username, password } = req.body;
-  //   const hashedPassword = await bcrypt.hash(password, 10);
+      // Create a new user within the transaction
+      await User.create({ username, password: hashedPassword }, { transaction });
 
-  //   // Create a new user within the transaction
-  //   await User.create({ username, password: hashedPassword }, { transaction });
+      await transaction.commit(); // Commit the transaction
 
-  //   await transaction.commit(); // Commit the transaction
-
-  //   res.status(201).json({ message: 'User registered successfully' });
-  // } catch (error) {
-  //   await transaction.rollback(); // Rollback the transaction in case of an error
-  //   res.status(500).json({ error: error});
-  // }
+      res.status(201).json({ message: 'User registered successfully' });
+    } catch (error) {
+      await transaction.rollback(); // Rollback the transaction in case of an error
+      res.status(500).json({ error: error});
+    }
+  }
 });
 
 module.exports = router;
