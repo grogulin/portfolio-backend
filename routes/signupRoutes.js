@@ -50,7 +50,7 @@ router.post('/signup', async (req, res, next) => {
     try {
 
       // check length of username and password
-      if (username.length <= 5) {
+      if (username.length < 5) {
         return res.status(400).json({ message: 'Username should consist of at least 5 characters.' });
       } else if (password.length > 25 || password.length < 5) {
         return res.status(400).json({ message: 'Password should be between 5-25 characters long.' });
