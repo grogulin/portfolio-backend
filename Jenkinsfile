@@ -20,8 +20,8 @@ pipeline {
                     script {
                         
                         def envContent = """
-EXPRESSJS_PORT=7011
-SEQUELIZE_PORT=7012
+EXPRESSJS_PORT=7111
+SEQUELIZE_PORT=7112
 DB_HOST=152.67.72.136
 DB_PORT=5432
 DB_NAME=portfolio_dev
