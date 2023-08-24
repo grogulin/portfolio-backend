@@ -13,7 +13,9 @@ router.get('/', async (req, res) => {
 
     setTimeout(async() => {
         try {
-            const projects = await Project.findAll();
+            const projects = await Project.findAll({
+                order: [['created_at', 'DESC']] // Sort by created_at field in descending order
+            });
             res.json(projects);
         } catch (error) {
             console.error('Error fetching projects:', error);
