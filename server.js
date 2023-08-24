@@ -1,27 +1,27 @@
+
+// modules import
+
 require('dotenv').config();
 var createError = require('http-errors');
 var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
-const cors = require('cors'); // Import the 'cors' package
-const sequelize = require('./config/database'); // Import your Sequelize instance
-
+const cors = require('cors');
+const sequelize = require('./config/database');
 const bodyParser = require('body-parser');
 
-const projectRoutes = require('./routes/projectRoutes');
-const signupRoutes = require('./routes/signupRoutes');
-const loginRoutes = require('./routes/loginRoutes');
+// routes import
 
+const projectRoutes = require('./routes/projectRoutes');
+const loginRoutes = require('./routes/signupRoutes');
 
 var sequelizePort = process.env.SEQUELIZE_PORT;
 
-var app = express();
 
-// view engine setup
+var app = express();
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
-
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
@@ -31,14 +31,17 @@ app.use(cors());
 
 const corsOptions = {
   origin: 'http://localhost:3000',
-  // Add other CORS options if needed
 };
 
 app.use(bodyParser.json());
 
 app.use('/projects', projectRoutes);
-app.use('/auth', signupRoutes);
 app.use('/auth', loginRoutes);
+app.use('/', (req, res, next) => {
+  // Unsupported HTTP method
+  res.status(405).json({ message: 'Method Not Allowed' });
+});
+
 
 sequelize
   .sync()
