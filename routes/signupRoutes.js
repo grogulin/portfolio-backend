@@ -65,7 +65,7 @@ router.post('/signup', async (req, res, next) => {
       res.status(201).json({ message: 'User registered successfully' });
     } catch (e) {
       await transaction.rollback();
-      if (e.errors.length === 1) {
+      if (e.errors && e.errors.length === 1) {
         const error = e.errors[0]
         const field = error.path;
         switch (error.type) {
