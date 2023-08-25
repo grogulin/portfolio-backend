@@ -5,8 +5,6 @@ const app = require('../../server');
 const Project = require('../../models/Project');
 const User = require('../../models/User');
 const sinon = require('sinon');
-const sequelize = require('../../config/database');
-const bcrypt = require('bcrypt');
 
 
 function createTestProject(name = 'Test project') {
@@ -165,11 +163,10 @@ describe('Projects/new endpoint', async function() {
     const password = 'testpassword';
 
     before(async function() {
-        // hash password for direct injecting it in db
-        const hashedPassword = await bcrypt.hash(password, 10);
+
         user = {
             username: username,
-            password: hashedPassword  
+            password: password  
         };
 
         // Truncate all users and create test user
@@ -178,7 +175,7 @@ describe('Projects/new endpoint', async function() {
 
         loginResponse = await request(app)
             .post('/auth/login')
-            .send({ username: username, password: password}); // using original, not bcrypted password
+            .send({ username: username, password: password});
 
         // Truncate all projects
         await Project.destroy({ truncate: true });
@@ -296,11 +293,10 @@ describe('Projects/:id endpoint', async function() {
     let id;
 
     before(async function() {
-        // hash password for direct injecting it in db
-        const hashedPassword = await bcrypt.hash(password, 10);
+        
         user = {
             username: username,
-            password: hashedPassword  
+            password: password  
         };
 
         // Truncate all users and create test user
@@ -309,7 +305,7 @@ describe('Projects/:id endpoint', async function() {
 
         loginResponse = await request(app)
             .post('/auth/login')
-            .send({ username: username, password: password}); // using original, not bcrypted password
+            .send({ username: username, password: password});
 
         // Truncate all projects
         await Project.destroy({ truncate: true });

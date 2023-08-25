@@ -2,14 +2,13 @@ require('dotenv').config();
 
 const express = require('express');
 const router = express.Router();
-const Project = require('../models/Project'); // Import your Project model
+const Project = require('../models/Project');
 const protectRoute = require('../middlewares/authMiddleware');
 
 const methodNotAllowed = (req, res, next) => res.status(405).json({ message: 'Method Not Allowed' });
 
 // Fetch all projects
 router.get('/', async (req, res) => {
-    console.log('Processing GET request on / ...')
 
     setTimeout(async() => {
         try {

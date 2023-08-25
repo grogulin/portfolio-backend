@@ -4,8 +4,6 @@ const request = require('supertest');
 const app = require('../../server');
 const { sequelizeForConnection } = require('../../config/database');
 const User = require('../../models/User');
-const bcrypt = require('bcrypt');
-const sequelize = require('../../config/database');
 const sinon = require('sinon');
 
 describe('Login/ endpoint', async function() {
@@ -19,12 +17,10 @@ describe('Login/ endpoint', async function() {
     const password = 'testpassword';
 
     before(async function() {
-
-        // hash password for direct injecting it in db
-        const hashedPassword = await bcrypt.hash(password, 10);
+        
         user = {
             username: username,
-            password: hashedPassword  
+            password: password  
         };
 
         // Truncate all users and create test user
@@ -35,14 +31,14 @@ describe('Login/ endpoint', async function() {
     after(async function() {
 
         // Truncate (empty) the users table
-        // await User.destroy({ truncate: true });
+        await User.destroy({ truncate: true });
     });
 
     it('should login and receive token', async function() {
         
         const response = await request(app)
             .post('/auth/login')
-            .send({ username: user.username, password: password }); // using original not bcrypted password for login
+            .send({ username: username, password: password });
 
         expect(response.status).to.equal(200);
         expect(response.body).to.have.property('token');
@@ -60,7 +56,7 @@ describe('Login/ endpoint', async function() {
             .send(user);
         
         expect(response.status).to.equal(401);
-        expect(response.body.message).to.equal('Invalid username. Please check your username and try again.');
+        expect(response.body.message).to.equal('Invalid username. Please check your username and try again');
     });
 
     it('should reject logging in with wrong password', async function() {
@@ -74,7 +70,7 @@ describe('Login/ endpoint', async function() {
             .send(user);
 
         expect(response.status).to.equal(401);
-        expect(response.body.message).to.equal('Incorrect password. Please check your password and try again.');
+        expect(response.body.message).to.equal('Incorrect password. Please check your password and try again');
     });
 
     it('should reject logging in with corrupted username', async function() {
@@ -88,7 +84,7 @@ describe('Login/ endpoint', async function() {
             .send(user);
 
         expect(response.status).to.equal(401);
-        expect(response.body.message).to.equal('Malformed or Corrupted Request: Missing Username or Password.');
+        expect(response.body.message).to.equal('Malformed or Corrupted Request: Missing Username or Password');
     });
 
     it('should reject logging in with corrupted password', async function() {
@@ -102,7 +98,7 @@ describe('Login/ endpoint', async function() {
             .send(user);
 
         expect(response.status).to.equal(401);
-        expect(response.body.message).to.equal('Malformed or Corrupted Request: Missing Username or Password.');
+        expect(response.body.message).to.equal('Malformed or Corrupted Request: Missing Username or Password');
     });
 
 
@@ -117,7 +113,7 @@ describe('Login/ endpoint', async function() {
             .send(user);
 
         expect(response.status).to.equal(401);
-        expect(response.body.message).to.equal('Malformed or Corrupted Request: Missing Username or Password.');
+        expect(response.body.message).to.equal('Malformed or Corrupted Request: Missing Username or Password');
     });
 
     it('should handle database error', async function() {
@@ -164,18 +160,20 @@ describe('Signup/ endpoint', async function() {
             .send(newUser);
 
         expect(response.status).to.equal(201);
-        expect(response.body.message).to.equal('User registered successfully.');
+        expect(response.body.message).to.equal('User registered successfully');
+
+        const queryResult = await User.findOne({where: {username: newUser.username} })
 
         // Check the database to ensure the user was added
-        const queryResult = await sequelize.query('SELECT * FROM users WHERE username = :username;',
-            {
-                logging: console.log,
-                replacements: { username: newUser.username },
-            });
+        // const queryResult = await sequelize.query('SELECT * FROM users WHERE username = :username;',
+        //     {
+        //         logging: console.log,
+        //         replacements: { username: newUser.username },
+        //     });
 
         // Access the query result from the nested array structure
-        const userRows = queryResult[0];
-        expect(userRows.length).to.equal(1);
+        // const userRows = queryResult[0];
+        expect(queryResult.dataValues.username).to.equal(newUser.username);
     });
 
 
@@ -194,10 +192,10 @@ describe('Signup/ endpoint', async function() {
         before(async function() {
         
             // hash password for direct injecting it in db
-            const hashedPassword = await bcrypt.hash(password, 10);
+            // const hashedPassword = await bcrypt.hash(password, 10);
             user = {
                 username: username,
-                password: hashedPassword  
+                password: password  
             };
     
             // Truncate all users and create test user
@@ -221,13 +219,13 @@ describe('Signup/ endpoint', async function() {
                 .send(newUser);
     
             expect(response.status).to.equal(400);
-            expect(response.body.message).to.equal('Username already taken.');
+            expect(response.body.message).to.equal('username must be unique');
         });
     });
 
     it('should reject registration with too short username', async function() {
         const newUser = {
-            username: '',
+            username: 'user',
             password: 'testpassword'
         };
 
@@ -236,7 +234,7 @@ describe('Signup/ endpoint', async function() {
             .send(newUser);
 
         expect(response.status).to.equal(400);
-        expect(response.body.message).to.equal('Username should consist of at least 5 characters.');
+        expect(response.body.message).to.equal('Username must be between 5 and 20 characters long');
     });
 
     it('should reject registration with too short password', async function() {
@@ -250,7 +248,7 @@ describe('Signup/ endpoint', async function() {
             .send(newUser);
 
         expect(response.status).to.equal(400);
-        expect(response.body.message).to.equal('Password should be between 5-25 characters long.');
+        expect(response.body.message).to.equal('Password must be between 5 and 25 characters long');
     });
 
     it('should reject registration with too long password', async function() {
@@ -264,7 +262,7 @@ describe('Signup/ endpoint', async function() {
             .send(newUser);
 
         expect(response.status).to.equal(400);
-        expect(response.body.message).to.equal('Password should be between 5-25 characters long.');
+        expect(response.body.message).to.equal('Password must be between 5 and 25 characters long');
     });
 
 });
