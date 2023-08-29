@@ -1,4 +1,3 @@
-
 // modules import
 
 require('dotenv').config();
@@ -46,6 +45,5 @@ sequelize.sync()
 	.catch(error => {
 		console.error('Error syncing database:', error);
 	});
-
 
 module.exports = app;
